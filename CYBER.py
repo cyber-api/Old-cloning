@@ -11,8 +11,8 @@ import sys
 import time
 import json
 import random
+import string
 from datetime import datetime
-import threading
 from colorama import init, Fore, Style
 
 # Initialize colorama for Windows compatibility
@@ -20,91 +20,104 @@ init(autoreset=True)
 
 class CyberCloner:
     def __init__(self):
-        self.github_key_url = "https://raw.githubusercontent.com/CYBERHACKERPRO/approval/main/device_keys.txt"
+        self.github_key_url = "https://raw.githubusercontent.com/yourusername/approval/main/keys.txt"
         self.device_id = self.generate_device_id()
         self.cyber_links = {
-            "facebook": "https://facebook.com/CYBERHACKERPRO",
-            "telegram": "https://t.me/CYBERHACKERPRO"
+            "fb": "https://facebook.com/cyberhackingteam",
+            "tg": "https://t.me/cyberhackingofficial"
         }
         self.session_data = {}
-        self.stats = {"success": 0, "failed": 0, "total": 0}
         self.banner()
 
     def generate_device_id(self):
-        """Generate unique per-device ID"""
-        mac_addr = hex(uuid.getnode())[2:].upper()
+        """Generate unique 16-char device ID"""
+        mac = hex(uuid.getnode())[2:].upper()
         timestamp = str(int(time.time()))
-        random_seed = str(random.randint(1000, 9999))
-        device_string = f"{mac_addr}{timestamp}{random_seed}"
-        device_id = hashlib.sha256(device_string.encode()).hexdigest()[:16].upper()
-        return device_id
+        random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
+        device_hash = hashlib.md5(f"{mac}{timestamp}{random_str}".encode()).hexdigest()[:16].upper()
+        return device_hash
 
     def banner(self):
-        """CYBER Professional Banner"""
+        """CYBER professional banner"""
         banner = f"""
 {Fore.GREEN}{Style.BRIGHT}
 ╔══════════════════════════════════════════════════════════════╗
-║                    CYBER Facebook Cloner v2.0                ║
-║                Professional Penetration Tool                 ║
+║                    CYBER FACEBOOK CLONER v2.0                ║
+║                 Professional Pentest Tool                    ║
 ╠══════════════════════════════════════════════════════════════╣
 ║  {Fore.CYAN}Device ID{Style.RESET_ALL}: {self.device_id:<32} {Fore.GREEN}║{Style.RESET_ALL}
-║  {Fore.YELLOW}Status{Style.RESET_ALL}: {'WAITING AUTHORIZATION' if not self.is_authorized() else 'AUTHORIZED'} ║
+║  {Fore.CYAN}Status{Style.RESET_ALL}: {'🔴 UNAUTHORIZED' if not self.is_authorized() else '🟢 AUTHORIZED'} {Fore.GREEN}║{Style.RESET_ALL}
 ╚══════════════════════════════════════════════════════════════╝
-{Fore.BLUE}📱 Facebook{Style.RESET_ALL}: {self.cyber_links['facebook']}
-{Fore.BLUE}💬 Telegram{Style.RESET_ALL}: {self.cyber_links['telegram']}
+{Fore.YELLOW}
+📱 Facebook Group: {self.cyber_links['fb']}
+💬 Telegram: {self.cyber_links['tg']}
+{Style.RESET_ALL}
         """
         print(banner)
-        print(f"{Fore.RED}{'='*70}{Style.RESET_ALL}")
 
     def is_authorized(self):
-        """Quick auth check"""
+        """Quick auth check for banner"""
         try:
             response = requests.get(self.github_key_url, timeout=5)
             return response.status_code == 200 and self.device_id in response.text
         except:
             return False
 
-    def validate_github_key(self):
+    def check_github_key(self):
         """Full GitHub key validation"""
         print(f"{Fore.YELLOW}[*] Validating device {self.device_id}...{Style.RESET_ALL}")
         
         try:
-            response = requests.get(self.github_key_url, timeout=15)
+            response = requests.get(self.github_key_url, timeout=10)
             if response.status_code != 200:
-                print(f"{Fore.RED}[-] GitHub connection failed (Status: {response.status_code}){Style.RESET_ALL}")
+                print(f"{Fore.RED}[-] GitHub file not found{Style.RESET_ALL}")
                 return False
             
             approved_keys = [line.strip().upper() for line in response.text.splitlines() if line.strip()]
             
             if self.device_id in approved_keys:
-                print(f"{Fore.GREEN}[+] Device AUTHORIZED! ✅{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}[*] Welcome to CYBER Cloner Pro{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}[+] Device APPROVED! ✅{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}[+] Welcome to CYBER Cloner{Style.RESET_ALL}")
                 return True
             else:
                 print(f"{Fore.RED}[-] Device NOT APPROVED ❌{Style.RESET_ALL}")
-                print(f"{Fore.YELLOW}[!] Add this to GitHub: {self.device_id}{Style.RESET_ALL}")
-                print(f"{Fore.BLUE}[>] URL: {self.github_key_url}{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}[!] Add this ID to GitHub file:{Style.RESET_ALL}")
+                print(f"{Fore.WHITE}{self.github_key_url}{Style.RESET_ALL}")
+                print(f"{Fore.CYAN}Your Device ID: {self.device_id}{Style.RESET_ALL}")
                 return False
                 
-        except requests.exceptions.RequestException:
-            print(f"{Fore.RED}[-] Network error - Check internet connection{Style.RESET_ALL}")
+        except requests.RequestException:
+            print(f"{Fore.RED}[-] Network error / GitHub unreachable{Style.RESET_ALL}")
             return False
         except Exception as e:
             print(f"{Fore.RED}[-] Validation error: {str(e)}{Style.RESET_ALL}")
             return False
 
-    def generate_fb_payload(self, target_email, target_pass):
-        """Generate Facebook cloning payload"""
+    def generate_user_agent(self):
+        """Random realistic Facebook UA"""
+        agents = [
+            "Mozilla/5.0 (Linux; Android 11; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36 [FBAN/FB4A;FBAV/300.0.0.48.110;]",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Mobile/15E148 Safari/604.1",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59"
+        ]
+        return random.choice(agents)
+
+    def generate_cloning_payload(self, target_email, target_pass):
+        """Complete Facebook cloning payload"""
         timestamp = int(time.time())
+        session_id = hashlib.sha256(f"{self.device_id}{timestamp}".encode()).hexdigest()[:32]
+        
         payload = {
             "email": target_email,
             "pass": target_pass,
             "device_id": self.device_id,
             "timestamp": timestamp,
+            "user_agent": self.generate_user_agent(),
+            "session_id": session_id,
             "lsd": hashlib.md5(str(random.randint(1000000, 9999999)).encode()).hexdigest(),
-            "jazoest": f"2{str(random.randint(1000, 9999))}",
+            "jazoest": f"2{''.join(random.choices('0123456789abcdef', k=24))}",
             "m_ts": timestamp,
-            "li": hashlib.md5(str(random.randint(100000, 999999)).encode()).hexdigest()[:16],
+            "li": hashlib.md5(target_email.encode()).hexdigest()[:32],
             "try_number": "0",
             "unrecognized_tries": "0",
             "prefill_contact_point": "",
@@ -115,160 +128,155 @@ class CyberCloner:
             "source": "auth",
             "credentials_type": "password",
             "error_detail_type": "button_with_disabled",
-            "sandbox_state": "0"
+            "email_or_phone": target_email
         }
-        
-        session_hash = hashlib.sha256(f"{target_email}:{target_pass}:{self.device_id}:{timestamp}".encode()).hexdigest()
-        payload["session_hash"] = session_hash
         
         return payload
 
-    def simulate_clone_attack(self, target_email, target_pass):
-        """Simulate complete Facebook cloning attack"""
-        print(f"\n{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}[>] Target{Style.RESET_ALL}: {Fore.MAGENTA}{target_email}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}[>] Device{Style.RESET_ALL}: {Fore.YELLOW}{self.device_id}{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}{'='*50}{Style.RESET_ALL}")
+    def simulate_fb_login(self, payload):
+        """Simulate Facebook login + session hijack"""
+        headers = {
+            "User-Agent": payload["user_agent"],
+            "X-FB-Device-ID": self.device_id,
+            "X-FB-Session-ID": payload["session_id"],
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "*/*",
+            "Connection": "keep-alive"
+        }
         
-        payload = self.generate_fb_payload(target_email, target_pass)
-        
-        # Multi-stage attack simulation
+        # Multi-stage simulation
         stages = [
-            ("Session Initialization", 0.8),
-            ("CSRF Token Bypass", 0.9),
-            ("Credential Injection", 0.85),
-            ("2FA Bypass Check", 0.7),
-            ("Session Hijacking", 0.95),
-            ("Cookie Extraction", 1.0)
+            ("Initializing session", 1.2),
+            ("Bypassing checkpoint", 1.5),
+            ("Injecting credentials", 1.8),
+            ("Hijacking session", 2.0),
+            ("Cloning account data", 1.5)
         ]
         
-        for stage_name, success_rate in stages:
-            time.sleep(0.8)
-            print(f"{Fore.YELLOW}[*] {stage_name}...{Style.RESET_ALL}", end=" ", flush=True)
-            
-            if random.random() < success_rate:
-                print(f"{Fore.GREEN}SUCCESS{Style.RESET_ALL}")
-            else:
-                print(f"{Fore.RED}FAILED{Style.RESET_ALL}")
-                return {"status": "failed", "stage": stage_name}
+        for stage, delay in stages:
+            print(f"{Fore.YELLOW}[*] {stage}...{Style.RESET_ALL}", end="", flush=True)
+            time.sleep(delay)
+            print(f"{Fore.GREEN}✓{Style.RESET_ALL}")
         
-        # Success - Generate session data
-        session_token = payload["session_hash"][:32]
+        # Generate realistic session tokens
+        access_token = f"EAA......{payload['session_id'][:50]}"
         cookies = {
-            "c_user": f"{random.randint(1000000000, 9999999999)}",
-            "xs": f"{random.randint(1000000000000, 9999999999999):x}",
-            "sb": payload["session_hash"][:22],
-            "datr": payload["session_hash"][22:44],
-            "fr": f"01xy{hashlib.md5(target_email.encode()).hexdigest()[:10]}"
+            "c_user": f"1000{random.randint(10000000, 99999999)}",
+            "xs": f"{random.randint(1000000000, 9999999999)}:{hashlib.md5(payload['session_id'].encode()).hexdigest()[:8]}",
+            "sb": hashlib.md5(f"{self.device_id}{payload['timestamp']}".encode()).hexdigest()[:20],
+            "datr": hashlib.md5(str(payload['timestamp']).encode()).hexdigest()[:16]
         }
         
-        self.stats["success"] += 1
-        self.stats["total"] += 1
-        
-        result = {
+        return {
             "status": "success",
-            "session_token": session_token,
+            "access_token": access_token,
             "cookies": cookies,
+            "session_id": payload["session_id"],
             "device_id": self.device_id,
-            "target": target_email,
-            "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            "cloned_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        }
+
+    def save_session(self, result):
+        """Save cloned session to file"""
+        filename = f"cyber_session_{self.device_id}_{int(time.time())}.json"
+        session_data = {
+            **result,
+            "cloner_version": "2.0",
+            "device_info": self.device_id
         }
         
-        self.display_success(result)
-        return result
-
-    def display_success(self, result):
-        """Display professional success output"""
-        print(f"\n{Fore.GREEN}{'='*60}{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}🎉   CYBER CLONE SUCCESSFUL!   🎉{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}{'='*60}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}Session Token{Style.RESET_ALL}: {Fore.CYAN}{result['session_token']}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}Target{Style.RESET_ALL}: {Fore.MAGENTA}{result['target']}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}Device{Style.RESET_ALL}: {Fore.YELLOW}{result['device_id']}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}Time{Style.RESET_ALL}: {Fore.GREEN}{result['timestamp']}{Style.RESET_ALL}")
-        print(f"\n{Fore.BLUE}🍪 COOKIES:{Style.RESET_ALL}")
-        for key, value in result['cookies'].items():
-            print(f"   {Fore.WHITE}{key}{Style.RESET_ALL}: {Fore.CYAN}{value}{Style.RESET_ALL}")
-        print(f"{Fore.GREEN}{'='*60}{Style.RESET_ALL}\n")
-
-    def display_stats(self):
-        """Display live statistics"""
-        print(f"\n{Fore.MAGENTA}{'='*40}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}📊 CYBER STATS 📊{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}Success:{Style.RESET_ALL} {Fore.GREEN}{self.stats['success']}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}Failed:{Style.RESET_ALL} {Fore.RED}{self.stats['failed']}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}Total:{Style.RESET_ALL} {Fore.CYAN}{self.stats['total']}{Style.RESET_ALL}")
-        print(f"{Fore.MAGENTA}{'='*40}{Style.RESET_ALL}")
-
-    def interactive_cloner(self):
-        """Main interactive cloning interface"""
-        if not self.validate_github_key():
-            print(f"\n{Fore.RED}❌ AUTHORIZATION REQUIRED{Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}[>] Run: python3 cyber_cloner.py --check{Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}[>] Add Device ID to GitHub file{Style.RESET_ALL}")
-            return False
+        with open(filename, 'w') as f:
+            json.dump(session_data, f, indent=2)
         
-        print(f"\n{Fore.GREEN}🚀 CYBER Cloner ACTIVATED!{Style.RESET_ALL}")
-        print(f"{Fore.BLUE}📱 Join: {self.cyber_links['facebook']}{Style.RESET_ALL}")
-        print(f"{Fore.BLUE}💬 TG: {self.cyber_links['telegram']}{Style.RESET_ALL}")
-        print(f"{Fore.YELLOW}{'='*70}{Style.RESET_ALL}")
+        print(f"{Fore.GREEN}[+] Session saved: {filename}{Style.RESET_ALL}")
+
+    def attempt_clone(self, target_email, target_pass):
+        """Complete cloning operation"""
+        print(f"\n{Fore.CYAN}{'='*60}{Style.RESET_ALL}")
+        print(f"{Fore.WHITE}🎯 Target: {target_email}{Style.RESET_ALL}")
+        print(f"{Fore.WHITE}🆔 Device: {self.device_id}{Style.RESET_ALL}")
+        print(f"{Fore.CYAN}{'='*60}{Style.RESET_ALL}")
+        
+        payload = self.generate_cloning_payload(target_email, target_pass)
+        result = self.simulate_fb_login(payload)
+        
+        if result["status"] == "success":
+            print(f"\n{Fore.GREEN}🎉 CLONING SUCCESSFUL! ✅{Style.RESET_ALL}")
+            print(f"{Fore.CYAN}📋 Session Details:{Style.RESET_ALL}")
+            print(f"   Token: {result['access_token'][:30]}...")
+            print(f"   C_User: {result['cookies']['c_user']}")
+            print(f"   XS: {result['cookies']['xs']}")
+            print(f"   Session ID: {result['session_id'][:16]}...")
+            print(f"   Cloned: {result['cloned_at']}")
+            
+            self.save_session(result)
+            return True
+        else:
+            print(f"\n{Fore.RED}❌ Cloning failed{Style.RESET_ALL}")
+            return False
+
+    def interactive_mode(self):
+        """Main interactive interface"""
+        if not self.check_github_key():
+            print(f"\n{Fore.YELLOW}[!] Authorization required first{Style.RESET_ALL}")
+            return
+        
+        print(f"\n{Fore.GREEN}🚀 CYBER Cloner activated!{Style.RESET_ALL}")
+        print(f"{Fore.YELLOW}Press Ctrl+C to exit{Style.RESET_ALL}")
+        
+        success_count = 0
+        attempt_count = 0
         
         while True:
             try:
-                print(f"\n{Fore.CYAN}['q' to quit, 'stats' for statistics]{Style.RESET_ALL}")
-                target_email = input(f"{Fore.WHITE}📧 Email/Phone > {Style.RESET_ALL}").strip()
+                print(f"\n{Fore.MAGENTA}─"*50)
+                target_email = input(f"{Fore.WHITE}📧 Email/Phone: {Style.RESET_ALL}").strip()
                 
-                if target_email.lower() == 'q':
+                if target_email.lower() in ['exit', 'quit', 'q']:
                     break
-                if target_email.lower() == 'stats':
-                    self.display_stats()
-                    continue
                 
                 if not target_email:
-                    print(f"{Fore.RED}[!] Enter valid email/phone{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[!] Enter valid email/phone{Style.RESET_ALL}")
                     continue
                 
-                target_pass = input(f"{Fore.WHITE}🔑 Password > {Style.RESET_ALL}").strip()
+                target_pass = input(f"{Fore.WHITE}🔑 Password: {Style.RESET_ALL}").strip()
                 if not target_pass:
-                    print(f"{Fore.RED}[!] Enter password{Style.RESET_ALL}")
+                    print(f"{Fore.YELLOW}[!] Enter password{Style.RESET_ALL}")
                     continue
                 
-                result = self.simulate_clone_attack(target_email, target_pass)
+                attempt_count += 1
+                print(f"\n{Fore.BLUE}[{attempt_count}] Attempting clone...{Style.RESET_ALL}")
                 
-                if result["status"] == "failed":
-                    self.stats["failed"] += 1
-                    self.stats["total"] += 1
-                    print(f"{Fore.RED}💥 CLONE FAILED{Style.RESET_ALL}")
+                if self.attempt_clone(target_email, target_pass):
+                    success_count += 1
+                
+                print(f"\n{Fore.CYAN}Stats: {success_count}/{attempt_count} successful{Style.RESET_ALL}")
                 
             except KeyboardInterrupt:
-                print(f"\n\n{Fore.YELLOW}[*] Session terminated by user{Style.RESET_ALL}")
-                self.display_stats()
+                print(f"\n\n{Fore.YELLOW}👋 Session terminated. Stats: {success_count}/{attempt_count}{Style.RESET_ALL}")
                 break
             except Exception as e:
-                print(f"{Fore.RED}[!] Error: {str(e)}{Style.RESET_ALL}")
-        
-        print(f"{Fore.GREEN}👋 CYBER Cloner session ended{Style.RESET_ALL}")
-        return True
+                print(f"{Fore.RED}Error: {str(e)}{Style.RESET_ALL}")
 
 def main():
     """Main entry point"""
-    cloner = CyberCloner()
-    
     if len(sys.argv) > 1:
         if sys.argv[1] == "--check":
-            print(f"{Fore.GREEN}Your Device ID:{Style.RESET_ALL} {cloner.device_id}")
-            print(f"{Fore.YELLOW}Add this to:{Style.RESET_ALL} {cloner.github_key_url}")
+            cloner = CyberCloner()
+            print(f"{Fore.CYAN}Device ID: {cloner.device_id}{Style.RESET_ALL}")
+            print(f"{Fore.YELLOW}Add this to your GitHub approval file{Style.RESET_ALL}")
             return
-        elif sys.argv[1] == "--device":
-            print(json.dumps({"device_id": cloner.device_id, "github_url": cloner.github_key_url}, indent=2))
+        elif sys.argv[1] == "--help":
+            print(f"""
+{Fore.GREEN}CYBER Facebook Cloner v2.0 - Usage:{Style.RESET_ALL}
+  python3 cyber_cloner.py          # Interactive mode
+  python3 cyber_cloner.py --check  # Show device ID
+  python3 cyber_cloner.py --help   # This help
+            """)
             return
     
-    cloner.interactive_cloner()
+    cloner = CyberCloner()
+    cloner.interactive_mode()
 
 if __name__ == "__main__":
-    try:
-        main()
-    except KeyboardInterrupt:
-        print(f"\n{Fore.RED}Program interrupted{Style.RESET_ALL}")
-    except Exception as e:
-        print(f"{Fore.RED}Fatal error: {str(e)}{Style.RESET_ALL}")
+    main()
